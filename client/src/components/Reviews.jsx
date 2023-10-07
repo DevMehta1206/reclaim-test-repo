@@ -1,5 +1,6 @@
 import React from "react";
 import { Light1, Light2 } from "../pages/Home/Home";
+const unsplash = "https://source.unsplash.com/random/?student";
 
 const Reviews = () => {
   return (
@@ -18,7 +19,7 @@ const Reviews = () => {
             <div className="flex gap-4">
               <img
                 className="w-12 h-12 rounded-full"
-                src="./images/avatars/avatar.webp"
+                src={unsplash}
                 alt="user avatar"
                 width="{400}"
                 height="{400}"
@@ -47,7 +48,7 @@ const Reviews = () => {
             <div className="flex gap-4">
               <img
                 className="w-12 h-12 rounded-full"
-                src="./images/avatars/avatar-1.webp"
+                src={unsplash}
                 alt="user avatar"
                 width="{200}"
                 height="{200}"
@@ -73,7 +74,7 @@ const Reviews = () => {
             <div className="flex gap-4">
               <img
                 className="w-12 h-12 rounded-full"
-                src="./images/avatars/avatar-2.webp"
+                src={unsplash}
                 alt="user avatar"
                 width="{200}"
                 height="{200}"
@@ -99,7 +100,7 @@ const Reviews = () => {
             <div className="flex gap-4">
               <img
                 className="w-12 h-12 rounded-full"
-                src="./images/avatars/avatar-3.webp"
+                src={unsplash}
                 alt="user avatar"
                 width="{200}"
                 height="{200}"
@@ -125,7 +126,7 @@ const Reviews = () => {
             <div className="flex gap-4">
               <img
                 className="w-12 h-12 rounded-full"
-                src="./images/avatars/avatar-4.webp"
+                src={unsplash}
                 alt="user avatar"
                 width="{200}"
                 height="{200}"
@@ -152,7 +153,7 @@ const Reviews = () => {
             <div className="flex gap-4">
               <img
                 className="w-12 h-12 rounded-full"
-                src="./images/avatars/avatar-2.webp"
+                src={unsplash}
                 alt="user avatar"
                 width="{400}"
                 height="{400}"
@@ -176,10 +177,8 @@ const Reviews = () => {
           </div>
         </div>
 
-
-        <Light1/>
-        <Light2/>
-
+        <Light1 />
+        <Light2 />
       </div>
     </div>
   );

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "../redux/reducers/userSlice";
 import { submitButtonClassUsed } from "../ClassNames";
+import axiosInstance from "../api/axios";
+import { useNotificationContext } from "../contexts/NotificationContext";
 
 const Login = () => {
   const [signupForm, setSingupForm] = useState(false);
@@ -74,6 +76,7 @@ const Login = () => {
 };
 
 export const LoginForm = ({ setSingupForm }) => {
+  const { showNotification } = useNotificationContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
@@ -94,12 +97,22 @@ export const LoginForm = ({ setSingupForm }) => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!emailPattern.test(email)) {
-      setError("Email should end with @cgcjhanjeri.in");
-      return;
+    try {
+      if (!emailPattern.test(email)) {
+        setError("Email should end with @cgcjhanjeri.in");
+        return;
+      }
+
+      const { data } = await axiosInstance.post("/login", {
+        email: email,
+        password: password,
+      });
+      showNotification("success", "OTP Sent!", 2000, "top", "OTP Sent!");
+    } catch (error) {
+      console.log(error);
     }
 
     // Clear any previous error message
@@ -171,7 +184,7 @@ export const LoginForm = ({ setSingupForm }) => {
         <button
           type="button"
           onClick={(e) => {
-            e.preventDefault()
+            e.preventDefault();
             setSingupForm(true);
           }}
           className="font-medium text-primary-600 hover:underline dark:text-primary-500"
@@ -184,8 +197,78 @@ export const LoginForm = ({ setSingupForm }) => {
 };
 
 export const SignupForm = ({ setSingupForm }) => {
+  const { showNotification } = useNotificationContext();
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    email: "",
+    otp: "",
+  });
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
+  const [optSent, setOtpSent] = useState(false);
+
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@cgcjhanjeri\.in$/;
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    if (!emailPattern.test(e.target.value)) {
+      // setError("Email should end with @cgcjhanjeri.in");
+      setError(true);
+    } else {
+      setError(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const sendOtp = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await axiosInstance.post("/getotp", {
+        email: formData.email,
+      });
+      setOtpSent(true);
+      showNotification("success", "OTP Sent!", 2000, "top", "OTP Sent!");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (!emailPattern.test(email)) {
+        setError("Email should end with @cgcjhanjeri.in");
+        return;
+      }
+
+      const { data } = await axiosInstance.post("/signup", formData);
+      showNotification("success", "OTP Sent!", 2000, "top", "OTP Sent!");
+    } catch (error) {
+      console.log(error);
+    }
+
+    // Clear any previous error message
+    setError("");
+
+    // Perform your login logic here
+    // ...
+  };
+
   return (
-    <form className="space-y-4 md:space-y-6" action="#">
+    <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
       {/* username input */}
       <div>
         <label
@@ -198,24 +281,6 @@ export const SignupForm = ({ setSingupForm }) => {
           type="text"
           name="username"
           id="username"
-          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="name@company.com"
-          required=""
-        />
-      </div>
-
-      {/* email input */}
-      <div>
-        <label
-          htmlFor="email"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >
-          Your email
-        </label>
-        <input
-          type="email"
-          name="email"
-          id="email"
           className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="name@company.com"
           required=""
@@ -239,6 +304,57 @@ export const SignupForm = ({ setSingupForm }) => {
           required=""
         />
       </div>
+
+      {/* email input */}
+      <div>
+        <label
+          htmlFor="email"
+          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >
+          Your email
+        </label>
+        <input
+          type="email"
+          name="email"
+          id="email"
+          value={email}
+          onChange={handleChange}
+          className={`bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
+            error ? "border-red-500 focus:border-none" : ""
+          }`}
+          placeholder="student@cgcjhanjeri.in"
+          required=""
+        />
+      </div>
+
+      {email !== "" && !optSent && (
+        <button
+          type="button"
+          onClick={sendOtp}
+          className={`${submitButtonClassUsed} w-14`}
+        >
+          Verify Email
+        </button>
+      )}
+      {/* verify otp */}
+      {optSent && (
+        <div>
+          <label
+            htmlFor="otp"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Enter OTP
+          </label>
+          <input
+            type="number"
+            name="otp"
+            id="otp"
+            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Enter your Otp here"
+            required={true}
+          />
+        </div>
+      )}
 
       <div className="flex items-center justify-between">
         <div className="flex items-start">

@@ -25,7 +25,7 @@ const Footer = () => {
               >
                 <img
                   src="https://portfolio-image-store.s3.ap-south-1.amazonaws.com/1696689325439-reclaim-low-resolution-logo-black-on-transparent-background.png"
-                  className="w-full max-w-xs mr-3"
+                  className="w-full max-w-xs mr-3 dark:invert invert-0"
                   alt="ReClaim Logo"
                 />
                 {/* <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
