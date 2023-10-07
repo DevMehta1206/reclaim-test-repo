@@ -31,7 +31,7 @@ const Cards = () => {
       <div className="max-w-screen-xl m-auto">
         <div className=" space-y-2 text-center">
           <h2 className="text-3xl font-bold text-gray-800 md:text-4xl dark:text-white">
-            Latest Articles
+            Latest Items
           </h2>
 
           <div className="w-full py-5">

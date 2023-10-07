@@ -4,6 +4,14 @@ import { borderBtn1, submitButtonClassUsed } from "../../ClassNames";
 const FoundForm = () => {
   // console.log(query.get("order_id"));
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [formDetails, setFormDetails] = useState({
+    title: "",
+    text: "",
+    image: "",
+    campus: "",
+    place: "",
+    tag: "",
+  });
 
   const handleFileChange = (event) => {
     // const files = event.target.files;
@@ -59,43 +67,32 @@ const FoundForm = () => {
       <form className="w-full min-h-screen">
         <div className="mb-6">
           <label
-            htmlFor="email"
+            htmlFor="title"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
-            Your email
+            Item Name
           </label>
           <input
-            type="email"
-            id="email"
+            type="text"
+            id="title"
+            name="title"
             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
             placeholder="name@flowbite.com"
             required=""
           />
         </div>
+
         <div className="mb-6">
           <label
-            htmlFor="password"
+            htmlFor="text"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
-            Your password
+            More about Item
           </label>
           <input
-            type="password"
-            id="password"
-            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-            required=""
-          />
-        </div>
-        <div className="mb-6">
-          <label
-            htmlFor="repeat-password"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Repeat password
-          </label>
-          <input
-            type="password"
-            id="repeat-password"
+            type="text"
+            id="text"
+            name="text"
             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
             required=""
           />
@@ -108,16 +105,17 @@ const FoundForm = () => {
 
         <div className="mb-6">
           <label
-            htmlFor="message"
+            htmlFor="place"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
-            Your message
+            Place
           </label>
           <textarea
             id="message"
+            name="place"
             rows={4}
             className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Leave a comment..."
+            placeholder="Where you find it "
             defaultValue={""}
           />
         </div>
@@ -127,16 +125,16 @@ const FoundForm = () => {
             htmlFor="countries"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
-            Select your country
+            Select your Campus
           </label>
           <select
-            id="countries"
+            id="campus"
+            name="campus"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
-            <option>United States</option>
-            <option>Canada</option>
-            <option>France</option>
-            <option>Germany</option>
+            <option>CGC -J</option>
+            <option>CGC -L</option>
+            <option>CU</option>
           </select>
         </div>
 
@@ -165,7 +163,7 @@ const FoundForm = () => {
         </div>
         <div className="w-full">
           <button type="submit" className={`${submitButtonClassUsed} w-full`}>
-            Register Lost Item
+            Register Found Item
           </button>
         </div>
       </form>
