@@ -44,11 +44,18 @@ export const getNote:RequestHandler = async (req,res,next) => {
 interface CreateNoteBody{
   title?:string;
   text?:string;
+  image?:string;
+  campus:string;
+  place?:string;
 }
 
 export const createNotes: RequestHandler<unknown,unknown,CreateNoteBody,unknown> =  async(req,res,next)=> {
   const title = req.body.title;
   const text =  req.body.text;
+  const image = req.body.image;
+  const campus = req.body.campus;
+  const place = req.body.place;
+
   const authenticatedUserId = req.session.userId;
     try {
       assertIsDefined(authenticatedUserId);

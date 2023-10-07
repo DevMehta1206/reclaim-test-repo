@@ -7,7 +7,7 @@ const noteSchema = new Schema({
     title: {type:String, required:true},
     text: {type:String},
     image: {type:String, required:true},
-    campus:{enum : ["CHANDIGARH UNI","CGC-L","CGC-J","CHITKARA UNI","PU","QUEST","others"]},
+    campus:{type:String},
     place:{type:String},
 
 },{timestamps:true});
