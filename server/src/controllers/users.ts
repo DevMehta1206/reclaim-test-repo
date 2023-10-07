@@ -40,7 +40,16 @@ export const sendVerificationCode :RequestHandler<unknown,unknown,otpRequestBody
     })
 
     
-    await sendEmailVerificationCode(emailBody, verificationCode)
+  
+    const otpResponse = await sendEmailVerificationCode(emailBody, verificationCode)
+
+    if (otpResponse.response.startsWith('250')) {
+        res.send(200).json({
+            "success":true
+        })
+      } else {
+        console.log('Email sending failed.');
+      }
     
 }catch (error) {
     next(error);

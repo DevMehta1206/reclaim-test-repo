@@ -20,5 +20,6 @@ export const sendEmailVerificationCode = async (toEmail: any, code: number) => {
               <p>Enter the following code to verify your email: <h2><strong>${code}</strong></h2></p>
               `
     })
-   console.log(answer)
+    return answer;
+   
 }
