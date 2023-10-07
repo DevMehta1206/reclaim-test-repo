@@ -146,7 +146,7 @@ const Navbar = () => {
             ref={dropdownRef}
             className={`z-40 ${
               showDropDown ? "" : "hidden"
-            } my-4  w-60 text-base p-3 absolute md:right-20 right-5 top-10 list-none  divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 `}
+            } my-4  w-60 text-base p-3 absolute md:right-20 right-5 top-10 list-none  divide-y divide-gray-100 rounded-lg shadow bg-slate-50 dark:bg-gray-700 dark:divide-gray-600 `}
             id="user-dropdown"
           >
             {user && (
@@ -283,7 +283,7 @@ const Navbar = () => {
 
             <li>
               <NavLink
-                to="/projects"
+                to="/found"
                 className={({ isActive }) =>
                   isActive ? activeClassName : linkClassName
                 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "../redux/reducers/userSlice";
+import { submitButtonClassUsed } from "../ClassNames";
 
 const Login = () => {
   const [signupForm, setSingupForm] = useState(false);
@@ -62,7 +63,7 @@ const Login = () => {
               {signupForm ? (
                 <SignupForm setSingupForm={setSingupForm} />
               ) : (
-                <LoignForm setSingupForm={setSingupForm} />
+                <LoginForm setSingupForm={setSingupForm} />
               )}
             </div>
           </div>
@@ -72,13 +73,44 @@ const Login = () => {
   );
 };
 
-export const LoignForm = ({ setSingupForm }) => {
+export const LoginForm = ({ setSingupForm }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
 
-  
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@cgcjhanjeri\.in$/;
 
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    if (!emailPattern.test(e.target.value)) {
+      // setError("Email should end with @cgcjhanjeri.in");
+      setError(true);
+    } else {
+      setError(false);
+    }
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!emailPattern.test(email)) {
+      setError("Email should end with @cgcjhanjeri.in");
+      return;
+    }
+
+    // Clear any previous error message
+    setError("");
+
+    // Perform your login logic here
+    // ...
+  };
 
   return (
-    <form className="space-y-4 md:space-y-6" action="#">
+    <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
       <div>
         <label
           htmlFor="email"
@@ -90,10 +122,19 @@ export const LoignForm = ({ setSingupForm }) => {
           type="email"
           name="email"
           id="email"
-          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="student@college.com"
+          value={email}
+          onChange={handleEmailChange}
+          className={`bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
+            error ? "border-red-500 focus:border-none" : ""
+          }`}
+          placeholder="student@cgcjhanjeri.in"
           required=""
         />
+        {error && (
+          <p className="text-xs mt-1 text-red-500">
+            Kindly user your College email id !
+          </p>
+        )}
       </div>
       <div>
         <label
@@ -106,31 +147,15 @@ export const LoignForm = ({ setSingupForm }) => {
           type="password"
           name="password"
           id="password"
+          value={password}
+          onChange={handlePasswordChange}
           placeholder="••••••••"
           className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           required=""
         />
       </div>
       <div className="flex items-center justify-between">
-        <div className="flex items-start">
-          <div className="flex items-center h-5">
-            <input
-              id="remember"
-              aria-describedby="remember"
-              type="checkbox"
-              className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-              required=""
-            />
-          </div>
-          <div className="ml-3 text-sm">
-            <label
-              htmlFor="remember"
-              className="text-gray-500 dark:text-gray-300"
-            >
-              Remember me
-            </label>
-          </div>
-        </div>
+        <div className="flex items-start">{/* Checkbox and label */}</div>
         <a
           href="#"
           className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
@@ -138,10 +163,7 @@ export const LoignForm = ({ setSingupForm }) => {
           Forgot password?
         </a>
       </div>
-      <button
-        type="submit"
-        className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-      >
+      <button type="submit" className={submitButtonClassUsed}>
         Sign in
       </button>
       <p className="text-sm font-light text-gray-500 dark:text-gray-400">
@@ -149,7 +171,7 @@ export const LoignForm = ({ setSingupForm }) => {
         <button
           type="button"
           onClick={(e) => {
-            e.preventDefault();
+            e.preventDefault()
             setSingupForm(true);
           }}
           className="font-medium text-primary-600 hover:underline dark:text-primary-500"

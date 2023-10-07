@@ -15,6 +15,8 @@ import Footer from "./components/Footer";
 import Login from "./components/Login";
 import Lost from "./pages/Lost/Lost";
 import LostForm from "./pages/LostForm/LostForm";
+import Found from "./pages/Found/Found";
+import FoundForm from "./pages/FoundForm/FoundForm";
 
 const Layout = () => {
   return (
@@ -47,6 +49,14 @@ const router = createBrowserRouter([
       {
         path: "/lost-registration",
         element: <LostForm />,
+      },
+      {
+        path: "/found",
+        element: <Found />,
+      },
+      {
+        path: "/found-registration",
+        element: <FoundForm />,
       },
     ],
   },

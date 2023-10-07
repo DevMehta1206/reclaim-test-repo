@@ -1,6 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const Cards = () => {
+  const [latestPosts, setLatesPosts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const filteredPosts =
+    selectedCategory === "All"
+      ? latestPosts
+      : latestPosts.filter((post) => post.campus === selectedCategory);
+
   return (
     <div id="blog ">
       <div className="max-w-screen-xl m-auto">
@@ -32,6 +40,16 @@ const Cards = () => {
               "https://images.unsplash.com/photo-1620121692029-d088224ddc74?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2832&q=80"
             }
           />
+
+          {/* 
+{filteredPosts.map(post => (
+            <SingleCard
+              key={post.id}
+              image={post.image}
+              title={post.title}
+              category={post.category}
+            />
+          ))} */}
         </div>
       </div>
     </div>
