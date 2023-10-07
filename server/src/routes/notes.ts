@@ -1,16 +1,17 @@
 import express from "express";
-import * as NotesController from "../controllers/notes"
+import * as NotesController from "../controllers/notes";
+import { requiresAuth } from "../middleware/auth";
 
 const router = express.Router();
 
-router.get("/",NotesController.getNotes);
+router.get("/getnotes", NotesController.getNotes);
 
-router.post("/",NotesController.createNotes);
+router.post("/", requiresAuth, NotesController.createNotes);
 
-router.get("/:noteId",NotesController.getNote);
+router.get("/:noteId", requiresAuth, NotesController.getNote);
 
-router.patch("/:noteId",NotesController.updatNote);
+router.patch("/:noteId", NotesController.updatNote);
 
-router.delete("/:noteId",NotesController.deleteNote);
+router.delete("/:noteId", requiresAuth, NotesController.deleteNote);
 
 export default router;

@@ -4,19 +4,25 @@ import createHttpError from "http-errors";
 import mongoose from "mongoose";
 import {assertIsDefined} from "../util/assertIsDefined"
 
-export const getNotes:RequestHandler = async (req, res, next) => {
-  const authenticatedUserId = req.session.userId;
-    try {
-      assertIsDefined(authenticatedUserId);
+export const getNotes: RequestHandler = async (req, res, next) => {
+  try {
+    // Remove the authentication check
 
-      
-        const notes = await NoteModel.find({userId : authenticatedUserId}).exec();
-        res.status(200).json(notes);
-    }
-    catch (error) {
-        next(error);
-    }
+    // Fetch notes without any user-specific filtering
+    const notes = await NoteModel.find({}).exec();
+    res.status(200).json(notes);
+  } catch (error) {
+    next(error);
+  }
 };
+
+
+
+
+
+
+
+
 
 export const getNote:RequestHandler = async (req,res,next) => {
   const noteId = req.params.noteId;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoginModal } from "../redux/reducers/userSlice";
+import { setLoginModal, setUser } from "../redux/reducers/userSlice";
 import { submitButtonClassUsed } from "../ClassNames";
 import axiosInstance from "../api/axios";
 import { useNotificationContext } from "../contexts/NotificationContext";
@@ -83,6 +83,7 @@ export const LoginForm = ({ setSingupForm }) => {
 
   const emailPattern = /^[a-zA-Z0-9._%+-]+@cgcjhanjeri\.in$/;
 
+  const dispatch = useDispatch();
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
     if (!emailPattern.test(e.target.value)) {
@@ -101,16 +102,20 @@ export const LoginForm = ({ setSingupForm }) => {
     e.preventDefault();
 
     try {
-      if (!emailPattern.test(email)) {
-        setError("Email should end with @cgcjhanjeri.in");
-        return;
-      }
+      // if (!emailPattern.test(email)) {
+      //   setError("Email should end with @cgcjhanjeri.in");
+      //   return;
+      // }
 
-      const { data } = await axiosInstance.post("/login", {
+      const { data } = await axiosInstance.post("/users/login", {
         email: email,
         password: password,
       });
-      showNotification("success", "OTP Sent!", 2000, "top", "OTP Sent!");
+
+      console.log(data);
+      dispatch(setUser(data));
+      dispatch(setLoginModal(false))
+      // showNotification("success", "OTP Sent!", 2000, "top", "OTP Sent!");
     } catch (error) {
       console.log(error);
     }
@@ -205,22 +210,11 @@ export const SignupForm = ({ setSingupForm }) => {
     otp: "",
   });
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [optSent, setOtpSent] = useState(false);
 
+  const dispatch = useDispatch()
   const emailPattern = /^[a-zA-Z0-9._%+-]+@cgcjhanjeri\.in$/;
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-    if (!emailPattern.test(e.target.value)) {
-      // setError("Email should end with @cgcjhanjeri.in");
-      setError(true);
-    } else {
-      setError(false);
-    }
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -228,14 +222,10 @@ export const SignupForm = ({ setSingupForm }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
   const sendOtp = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axiosInstance.post("/getotp", {
+      const { data } = await axiosInstance.post("/users/sendotp", {
         email: formData.email,
       });
       setOtpSent(true);
@@ -245,16 +235,20 @@ export const SignupForm = ({ setSingupForm }) => {
     }
   };
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      if (!emailPattern.test(email)) {
-        setError("Email should end with @cgcjhanjeri.in");
-        return;
-      }
+      // if (!emailPattern.test(formData?.email)) {
+      //   setError("Email should end with @cgcjhanjeri.in");
+      //   return;
+      // }
 
-      const { data } = await axiosInstance.post("/signup", formData);
+      const { data } = await axiosInstance.post("/users/signup", formData);
+      dispatch(setUser(data));
+      dispatch(setLoginModal(false))
       showNotification("success", "OTP Sent!", 2000, "top", "OTP Sent!");
     } catch (error) {
       console.log(error);
@@ -282,8 +276,10 @@ export const SignupForm = ({ setSingupForm }) => {
           name="username"
           id="username"
           className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="name@company.com"
+          placeholder="Choose a username"
           required=""
+          onChange={handleChange}
+          value={formData?.username}
         />
       </div>
 
@@ -302,6 +298,8 @@ export const SignupForm = ({ setSingupForm }) => {
           placeholder="••••••••"
           className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           required=""
+          onChange={handleChange}
+          value={formData?.password}
         />
       </div>
 
@@ -317,17 +315,17 @@ export const SignupForm = ({ setSingupForm }) => {
           type="email"
           name="email"
           id="email"
-          value={email}
-          onChange={handleChange}
           className={`bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
             error ? "border-red-500 focus:border-none" : ""
           }`}
           placeholder="student@cgcjhanjeri.in"
           required=""
+          onChange={handleChange}
+          value={formData?.email}
         />
       </div>
 
-      {email !== "" && !optSent && (
+      {formData?.email !== "" && (
         <button
           type="button"
           onClick={sendOtp}
@@ -352,6 +350,8 @@ export const SignupForm = ({ setSingupForm }) => {
             className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Enter your Otp here"
             required={true}
+            onChange={handleChange}
+            value={formData?.otp}
           />
         </div>
       )}
@@ -384,10 +384,7 @@ export const SignupForm = ({ setSingupForm }) => {
         </a>
       </div>
 
-      <button
-        type="submit"
-        className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-      >
+      <button type="submit" className={submitButtonClassUsed}>
         Sign up
       </button>
       <p className="text-sm font-light text-gray-500 dark:text-gray-400">

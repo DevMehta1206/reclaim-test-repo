@@ -110,21 +110,21 @@ export const signUp:RequestHandler<unknown,unknown,signUpBody,unknown> = async (
 };
 
 interface LoginBody{
-    username?:string,
+    email?:string,
     password?:string,
 }
 
 export const login:RequestHandler<unknown,unknown,LoginBody,unknown> = async(req,res,next) =>{
 
-    const username = req.body.username;
+    const email = req.body.email;
     const password = req.body.password;
 
     try {
 
-        if(!username ||!password){
+        if(!email ||!password){
             throw createHttpError(400,"Parameters missing");
         }
-        const user = await UserModel.findOne({username:username}).select("+password +email").exec();
+        const user = await UserModel.findOne({email:email}).select("+username +password +email").exec();
 
         if(!user){
             throw createHttpError(401,"invalid creadentials");

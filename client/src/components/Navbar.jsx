@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { setLoginModal } from "../redux/reducers/userSlice";
+import { setLoginModal, setUser } from "../redux/reducers/userSlice";
+import axiosInstance from "../api/axios";
 // import { useUser } from "../../contexts/UserContext";
 
 const linkClassName = `
@@ -17,11 +18,46 @@ const Navbar = () => {
   const [mobileView, setMobileView] = useState(false);
   const [scrolledNav, setScrollednav] = useState(false);
   const [showDropDown, setShowDropDown] = useState(false);
+
+  const { user } = useSelector((state) => state.user);
+
   const [theme, setTheme] = useState("light");
 
   const dispatch = useDispatch();
-  // const { user, logout } = useUser();
-  const user = false;
+
+  useEffect(() => {
+    const getMe = async () => {
+      try {
+        // Make an authenticated request using the saved session credentials
+        const response = await fetch("/users/me", {
+          method: "GET",
+          // credentials: "include", // Include credentials (cookies) in the request
+        });
+
+        if (response.ok && response.status==='200') {
+          const data = await response.json();
+          dispatch(setUser(data));
+          console.log(response);
+        } else {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    getMe();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      const { data } = axiosInstance.post("/users/logout");
+      console.log(data)
+      
+    } catch (error) {
+      console.error(error)
+    }
+  };
   const toggleButtonRef = useRef(null);
   const dropdownRef = useRef(null);
 
@@ -39,7 +75,7 @@ const Navbar = () => {
     };
   }, []);
 
-  const handleLogout = () => {};
+
 
   useEffect(() => {
     // add event listener to document object when component mounts
@@ -136,7 +172,9 @@ const Navbar = () => {
             <span className="sr-only">Open user menu</span>
             <img
               className="w-8 h-8 rounded-full"
-              src={'https://imgs.search.brave.com/UC52XQQ8PpdwaG3USbN-1BSgK1TCJX9HFoJ0gncJXMI/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pY29u/LWxpYnJhcnkuY29t/L2ltYWdlcy9uby11/c2VyLWltYWdlLWlj/b24vbm8tdXNlci1p/bWFnZS1pY29uLTI1/LmpwZw'}
+              src={
+                "https://imgs.search.brave.com/UC52XQQ8PpdwaG3USbN-1BSgK1TCJX9HFoJ0gncJXMI/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pY29u/LWxpYnJhcnkuY29t/L2ltYWdlcy9uby11/c2VyLWltYWdlLWlj/b24vbm8tdXNlci1p/bWFnZS1pY29uLTI1/LmpwZw"
+              }
               alt="user photo"
             />
           </button>
@@ -152,14 +190,16 @@ const Navbar = () => {
             {user && (
               <div className="flex justify-center items-center">
                 <img
-                  className="w-14 h-14 rounded-full"
-                  src={user?.about?.avatar?.url}
+                  className="w-10 overflow-hidden h-10 mr-2 rounded-full"
+                  src={
+                    "https://imgs.search.brave.com/UC52XQQ8PpdwaG3USbN-1BSgK1TCJX9HFoJ0gncJXMI/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pY29u/LWxpYnJhcnkuY29t/L2ltYWdlcy9uby11/c2VyLWltYWdlLWlj/b24vbm8tdXNlci1p/bWFnZS1pY29uLTI1/LmpwZw"
+                  }
                   alt="user photo"
                 />
 
                 <div className="pr-4 py-3">
                   <span className="block text-sm text-gray-900 dark:text-white">
-                    {user?.name}
+                    {user?.username}
                   </span>
                   <span className="block text-sm  text-gray-500 truncate dark:text-gray-400">
                     {user?.email}
@@ -215,7 +255,7 @@ const Navbar = () => {
                 }}
               >
                 <button className="block w-full bg-gray-100  px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 dark:text-gray-200 dark:bg-gray-800 dark:hover:text-white">
-                  Login
+                  Login/Signup
                 </button>
               </li>
             )}
