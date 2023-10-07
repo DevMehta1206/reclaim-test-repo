@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const BASE_URL = "http://localhost:50001/"
+export const BASE_URL = "http://localhost:5001/api"
 // export const BASE_URL = "https://portfolyo-backend.onrender.com/api"
 const axiosInstance = axios.create({
     baseURL: BASE_URL,

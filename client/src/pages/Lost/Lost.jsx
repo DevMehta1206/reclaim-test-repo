@@ -1,8 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SelectButton, SingleCard } from "../../components/Cards";
 import { Link } from "react-router-dom";
+import axiosInstance from "../../api/axios";
+import { editHeading } from "../../ClassNames";
 
 const Lost = () => {
+  const [latestPosts, setLatesPosts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const { data } = await axiosInstance.get("/notes/getnotes");
+        console.log(data);
+        setLatesPosts(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchPosts();
+  }, []);
+
+  const filteredPosts =
+    selectedCategory === "All"
+      ? latestPosts.filter((post) => post.tag === "lost")
+      : latestPosts.filter(
+          (post) => post.campus === selectedCategory && post.tag === "lost"
+        );
+
+
+
   return (
     <>
       <div id="blog ">
@@ -13,28 +40,51 @@ const Lost = () => {
             </h2>
 
             <div className="w-full py-5">
-              <SelectButton text={"All"} />
-              <SelectButton text={"CGC"} />
-              <SelectButton text={"CGC"} />
-              <SelectButton text={"CGC"} />
+              <SelectButton
+                text={"All"}
+                value={"All"}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+              />
+              <SelectButton
+                text={"CU"}
+                value={"cu"}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+              />
+              <SelectButton
+                text={"CGC -J"}
+                value={"jhanjeri"}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+              />
+              <SelectButton
+                text={"CGC -L"}
+                value={"landran"}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+              />
             </div>
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <SingleCard
-              image={
-                "https://images.unsplash.com/photo-1661749711934-492cd19a25c3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80"
-              }
-            />
-            <SingleCard
-              image={
-                "https://images.unsplash.com/photo-1491895200222-0fc4a4c35e18?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80"
-              }
-            />
-            <SingleCard
-              image={
-                "https://images.unsplash.com/photo-1620121692029-d088224ddc74?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2832&q=80"
-              }
-            />
+          {filteredPosts?.length === 0 && (
+            <div className="col-span-full text-center">
+              <h3 className={editHeading}>Nothing Lost or Found</h3>{" "}
+              <p>Bde Tez ho rahe ho</p>{" "}
+            </div>
+          )}
+
+            {filteredPosts.map((post) => (
+              <SingleCard
+                key={post._id}
+                image={post.image}
+                title={post.title}
+                tag={post.tag}
+                campus={post.campus}
+                text={post.text}
+                place={post.place}
+              />
+            ))}
           </div>
         </div>
       </div>
