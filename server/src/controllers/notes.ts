@@ -47,6 +47,7 @@ interface CreateNoteBody{
   image?:string;
   campus:string;
   place?:string;
+  tag?:string;
 }
 
 export const createNotes: RequestHandler<unknown,unknown,CreateNoteBody,unknown> =  async(req,res,next)=> {
@@ -55,6 +56,7 @@ export const createNotes: RequestHandler<unknown,unknown,CreateNoteBody,unknown>
   const image = req.body.image;
   const campus = req.body.campus;
   const place = req.body.place;
+  const tag = req.body.tag;
 
   const authenticatedUserId = req.session.userId;
     try {
