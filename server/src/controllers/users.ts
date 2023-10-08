@@ -7,6 +7,9 @@ import users from "../model/user";
 import emailVerificationCode from "../model/EmailVerificationCode";
 import {sendEmailVerificationCode} from "../util/EMailer"
 import { email } from "envalid";
+import jwt from "jsonwebtoken";
+import env from "../util/validateEnv"
+
 
 export const getAuthenticatedUser:RequestHandler = async (req,res,next) => {
  
@@ -100,9 +103,11 @@ export const signUp:RequestHandler<unknown,unknown,signUpBody,unknown> = async (
         const newUser = await UserModel.create({username:username,email:email,password:passwordHashed}); 
 
     
-        req.session.userId = newUser._id;
-        res.status(201).json(newUser);
+        const token = jwt.sign({ user: newUser },env.JWT_SECRET , {
+            expiresIn: "7d", // Set the token expiration time as needed
+          });
 
+          res.status(201).json({ user: newUser });
 
     } catch (error) {
         next(error);
@@ -136,8 +141,11 @@ export const login:RequestHandler<unknown,unknown,LoginBody,unknown> = async(req
             throw createHttpError(401,"invalid creadentials");
         }
        
-        req.session.userId = user._id;
-        res.status(201).json(user);
+        const token = jwt.sign({ userId: user._id},env.JWT_SECRET , {
+            expiresIn: "7d", // Set the token expiration time as needed
+          });
+
+          res.status(201).json({ message:"User Logged in Successfully !", token });
 
     } catch (error) {
         next(error);
