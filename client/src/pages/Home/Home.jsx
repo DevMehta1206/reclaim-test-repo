@@ -5,11 +5,11 @@ import GetStarted from "../../components/GetStarted";
 import { Link } from "react-router-dom";
 
 const Home = () => {
-
   return (
     <div className="  ">
       <div className="py-5 md:px-10 px-3 relative isolate ">
-        <div className="relative isolate " id="home">
+        {/* landing page */}
+        <div className="relative isolate  " id="home">
           <div
             aria-hidden="true"
             className="absolute inset-0 grid grid-cols-2 -space-x-52 opacity-40 dark:opacity-20"
@@ -18,7 +18,7 @@ const Home = () => {
             <div className="blur-[106px] h-32 bg-gradient-to-r from-cyan-400 to-sky-300 dark:to-indigo-600" />
           </div>
           <div>
-            <div className="relative pt-36 ml-auto pb-28">
+            <div className="relative pt-36 ml-auto pb-28 ">
               <div className="lg:w-2/3 text-center mx-auto">
                 <h1
                   style={{ fontFamily: "Kalam" }}
@@ -35,12 +35,10 @@ const Home = () => {
                   </span>
                 </button>
 
-                <p className="mt-8 text-gray-700 dark:text-gray-300">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio
-                  incidunt nam itaque sed eius modi error totam sit illum.
-                  Voluptas doloribus asperiores quaerat aperiam. Quidem harum
-                  omnis beatae ipsum soluta!
-                </p>
+                <div className="mt-8 text-gray-700 dark:text-gray-300 md:text-2xl text-sm">
+                  Lost and Found Hub for College Students
+                </div>
+
                 <div className="mt-16 flex flex-wrap justify-center gap-y-4 gap-x-6">
                   <Link
                     to="/found"
@@ -82,15 +80,14 @@ const Home = () => {
                 </div> */}
               </div>
             </div>
-          <Light2 />
-
+            <Light2 />
           </div>
 
           <Light1 />
         </div>
 
         <Cards />
-        <GetStarted />
+        {/* <GetStarted /> */}
         <Reviews />
       </div>
     </div>

@@ -54,6 +54,10 @@ interface CreateNoteBody{
   campus:string;
   place?:string;
   tag?:string;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2475eb62a7d080cdf34313b5a53c59f16e99bbe3
 }
 
 export const createNotes: RequestHandler<unknown,unknown,CreateNoteBody,unknown> =  async(req,res,next)=> {

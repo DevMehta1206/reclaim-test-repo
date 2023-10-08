@@ -9,7 +9,11 @@ const noteSchema = new Schema({
     image: {type:String, required:true},
     campus:{type:String},
     place:{type:String},
+<<<<<<< HEAD
     tag:{type:String, required:true},
+=======
+    tag:{type:String},
+>>>>>>> 2475eb62a7d080cdf34313b5a53c59f16e99bbe3
 
 },{timestamps:true});
 
