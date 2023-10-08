@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import { setLoginModal, setUser } from "../redux/reducers/userSlice";
 import axiosInstance from "../api/axios";
 // import { useUser } from "../../contexts/UserContext";
+export const BASE_URL = "http://localhost:5001/api";
 
 const linkClassName = `
 block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 font-bold
@@ -29,18 +30,20 @@ const Navbar = () => {
     const getMe = async () => {
       try {
         // Make an authenticated request using the saved session credentials
-        const response = await fetch("/users/me", {
+        const response = await fetch(`${BASE_URL}/users/me`, {
           method: "GET",
-          // credentials: "include", // Include credentials (cookies) in the request
+          credentials: "include", // Include credentials (cookies) in the request
         });
 
-        if (response.ok && response.status==='200') {
+        if (response.ok && response.status === "200") {
           const data = await response.json();
           dispatch(setUser(data));
           console.log(response);
         } else {
           throw new Error(`Request failed with status ${response.status}`);
         }
+
+
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -52,10 +55,9 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       const { data } = axiosInstance.post("/users/logout");
-      console.log(data)
-      
+      console.log(data);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   };
   const toggleButtonRef = useRef(null);
@@ -74,8 +76,6 @@ const Navbar = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-
 
   useEffect(() => {
     // add event listener to document object when component mounts
@@ -334,7 +334,7 @@ const Navbar = () => {
 
             <li>
               <NavLink
-                to="/timeline"
+                to="/lost-registration"
                 className={({ isActive }) =>
                   isActive ? activeClassName : linkClassName
                 }

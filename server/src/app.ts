@@ -8,8 +8,7 @@ import session from "express-session";
 import env from "./util/validateEnv";
 import MongoStore from "connect-mongo";
 import { requiresAuth } from "./middleware/auth";
-import cors  from "cors"
-
+import cors from "cors";
 
 const app = express();
 
@@ -19,7 +18,12 @@ app.use(morgan("dev"));
 // Enable CORS for all routes
 app.use(cors());
 
-
+// app.use(
+//   cors({
+//     origin: "http://localhost:5174", // Replace with your frontend origin
+//     credentials: true, // Enable credentials (cookies, authorization headers)
+//   })
+// );
 
 app.use(express.json());
 

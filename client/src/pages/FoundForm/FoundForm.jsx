@@ -1,5 +1,15 @@
 import React, { useRef, useState } from "react";
-import { borderBtn1, submitButtonClassUsed } from "../../ClassNames";
+import {
+  actualHeading,
+  borderBtn1,
+  submitButtonClassUsed,
+} from "../../ClassNames";
+import axiosInstance from "../../api/axios";
+import { LostFixedButton } from "../Lost/Lost";
+
+const imageExtensions = ["jpg", "jpeg", "png", "gif", "webp", "svg", "bmp"];
+
+const BASE_URL = "https://file-upload-server-70r3.onrender.com/api";
 
 const FoundForm = () => {
   // console.log(query.get("order_id"));
@@ -8,9 +18,9 @@ const FoundForm = () => {
     title: "",
     text: "",
     image: "",
-    campus: "",
+    campus: "Jhanjeri",
     place: "",
-    tag: "",
+    tag: "found",
   });
 
   const handleFileChange = (event) => {
@@ -46,128 +56,167 @@ const FoundForm = () => {
 
   //   console.log(selectedFiles);
   const handleFileUpload = async () => {
-    // try {
-    //   const formData = new FormData();
-    //   selectedFiles.forEach((selectedFile) => {
-    //     formData.append("files", selectedFile.file);
-    //   });
-    //   const response = await fetch(`${BASE_URL}/s3/upload`, {
-    //     method: "POST",
-    //     body: formData,
-    //   });
-    // } catch (error) {
-    //   console.log("Error uploading files", error);
-    // } finally {
-    //   setSelectedFiles([]);
-    // }
+    try {
+      const formData = new FormData();
+      selectedFiles.forEach((selectedFile) => {
+        formData.append("files", selectedFile.file);
+      });
+      const response = await fetch(`${BASE_URL}/s3/upload`, {
+        method: "POST",
+        body: formData,
+      });
+      return response;
+    } catch (error) {
+      console.log("Error uploading files", error);
+    } finally {
+      // setSelectedFiles([]);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(formDetails);
+    try {
+      const imageUrl = await handleFileUpload();
+      console.log(imageUrl);
+      const { data } = await axiosInstance.post("notes/create", {
+        ...formDetails,
+        image: imageUrl?.url,
+      });
+    } catch (error) {
+      console.log("Error in Filling up Form", error);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name !== "image") {
+      setFormDetails({ ...formDetails, [name]: value });
+    }
   };
 
   return (
-    <div className="py-24 md:px-20 px-10">
-      <form className="w-full min-h-screen">
-        <div className="mb-6">
-          <label
-            htmlFor="title"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Item Name
-          </label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-            placeholder="name@flowbite.com"
-            required=""
-          />
-        </div>
+    <>
+      <div className="py-24 md:px-20 px-6">
+        <h2 className={`${actualHeading} text-center w-full`}>
+          {" "}
+          Report Found Item{" "}
+        </h2>
 
-        <div className="mb-6">
-          <label
-            htmlFor="text"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            More about Item
-          </label>
-          <input
-            type="text"
-            id="text"
-            name="text"
-            className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-            required=""
-          />
-        </div>
-
-        <FileUpload
-          selectedFiles={selectedFiles}
-          handleFileChange={handleFileChange}
-        />
-
-        <div className="mb-6">
-          <label
-            htmlFor="place"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Place
-          </label>
-          <textarea
-            id="message"
-            name="place"
-            rows={4}
-            className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Where you find it "
-            defaultValue={""}
-          />
-        </div>
-
-        <div className="mb-6">
-          <label
-            htmlFor="countries"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            Select your Campus
-          </label>
-          <select
-            id="campus"
-            name="campus"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          >
-            <option>CGC -J</option>
-            <option>CGC -L</option>
-            <option>CU</option>
-          </select>
-        </div>
-
-        <div className="flex items-start mb-6">
-          <div className="flex items-center h-5">
+        <form className="w-full min-h-screen" onSubmit={handleSubmit}>
+          <div className="mb-6">
+            <label
+              htmlFor="title"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Item Name
+            </label>
             <input
-              id="terms"
-              type="checkbox"
-              defaultValue=""
-              className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
+              type="text"
+              id="title"
+              name="title"
+              className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+              placeholder="Name the Item"
               required=""
+              onChange={handleChange}
+              value={formDetails?.title}
             />
           </div>
-          <label
-            htmlFor="terms"
-            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-          >
-            I agree with the{" "}
-            <a
-              href="#"
-              className="text-blue-600 hover:underline dark:text-blue-500"
+
+          <div className="mb-6">
+            <label
+              htmlFor="text"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              terms and conditions
-            </a>
-          </label>
-        </div>
-        <div className="w-full">
-          <button type="submit" className={`${submitButtonClassUsed} w-full`}>
-            Register Found Item
-          </button>
-        </div>
-      </form>
-    </div>
+              More about Item
+            </label>
+            <input
+              type="text"
+              id="text"
+              name="text"
+              className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+              required=""
+              onChange={handleChange}
+              value={formDetails?.text}
+            />
+          </div>
+
+          <FileUpload
+            selectedFiles={selectedFiles}
+            handleFileChange={handleFileChange}
+          />
+
+          <div className="mb-6">
+            <label
+              htmlFor="place"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Place
+            </label>
+            <textarea
+              id="message"
+              name="place"
+              rows={4}
+              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Where you find it "
+              onChange={handleChange}
+              value={formDetails?.place}
+            />
+          </div>
+
+          <div className="mb-6">
+            <label
+              htmlFor="campus"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Select your Campus
+            </label>
+            <select
+              id="campus"
+              name="campus"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              onChange={handleChange}
+              value={formDetails?.campus}
+            >
+              <option value={"Jhanjeri"}>CGC -J</option>
+              <option value={"Landran"}>CGC -L</option>
+              <option value={"cu"}>CU</option>
+            </select>
+          </div>
+
+          <div className="flex items-start mb-6">
+            <div className="flex items-center h-5">
+              <input
+                id="terms"
+                type="checkbox"
+                defaultValue=""
+                className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
+                required=""
+              />
+            </div>
+            <label
+              htmlFor="terms"
+              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >
+              I agree with the{" "}
+              <a
+                href="#"
+                className="text-blue-600 hover:underline dark:text-blue-500"
+              >
+                terms and conditions
+              </a>
+            </label>
+          </div>
+          <div className="w-full">
+            <button type="submit" className={`${submitButtonClassUsed} w-full`}>
+              Register Found Item
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <LostFixedButton />
+    </>
   );
 };
 
@@ -187,7 +236,7 @@ const FileUpload = ({ selectedFiles, handleFileChange }) => {
       <div className="overflow-y-auto">
         {/*  this is to upload and for selected files */}
         {selectedFiles?.length > 0 && (
-          <div className="mt-5 grid-cols-2 md:grid-cols-3 grid p-2 gap-2 bg-gray-100 dark:bg-gray-900 rounded-lg">
+          <div className="mt-5 grid-cols-1 sm:grid-cols- md:grid-cols-3 grid p-2 gap-2 bg-gray-100 dark:bg-gray-900 rounded-lg">
             <h2 className="text-2xl col-span-full dark:text-white underline text-center mb-2">
               Selected Media
             </h2>
