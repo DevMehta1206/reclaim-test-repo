@@ -28,8 +28,6 @@ const Lost = () => {
           (post) => post.campus === selectedCategory && post.tag === "lost"
         );
 
-
-
   return (
     <>
       <div id="blog ">
@@ -67,12 +65,12 @@ const Lost = () => {
             </div>
           </div>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {filteredPosts?.length === 0 && (
-            <div className="col-span-full text-center">
-              <h3 className={editHeading}>Nothing Lost or Found</h3>{" "}
-              <p>Bde Tez ho rahe ho</p>{" "}
-            </div>
-          )}
+            {filteredPosts?.length === 0 && (
+              <div className="col-span-full text-center">
+                <h3 className={editHeading}>Nothing Lost or Found</h3>{" "}
+                <p>Bde Tez ho rahe ho</p>{" "}
+              </div>
+            )}
 
             {filteredPosts.map((post) => (
               <SingleCard
@@ -89,12 +87,12 @@ const Lost = () => {
         </div>
       </div>
 
-      <FixedButton />
+      <LostFixedButton />
     </>
   );
 };
 
-const FixedButton = () => {
+export const LostFixedButton = () => {
   return (
     <Link
       to="/lost-registration"

@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/getnotes", NotesController.getNotes);
 
-router.post("/", requiresAuth, NotesController.createNotes);
+router.post("/create", requiresAuth, NotesController.createNotes);
 
 router.get("/:noteId", requiresAuth, NotesController.getNote);
 

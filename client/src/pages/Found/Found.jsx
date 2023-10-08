@@ -86,12 +86,12 @@ const Found = () => {
         </div>
       </div>
 
-      <FixedButton />
+      <FoundFixedButton />
     </>
   );
 };
 
-const FixedButton = () => {
+export const FoundFixedButton = () => {
   return (
     <Link
       to="/found-registration"
