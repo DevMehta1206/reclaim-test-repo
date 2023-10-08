@@ -36,7 +36,7 @@ app.use( session({
 
 app.use("/api/users",userRoutes);
 
-app.use("/api/notes",requiresAuth,notesRoute);
+app.use("/api/notes",notesRoute);
 
 app.use((req,res,next)=>{
     next(createHttpError(404,"End Point Not Found "));

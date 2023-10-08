@@ -39,7 +39,7 @@ export const getNote: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
-<<<<<<< HEAD
+
 interface CreateNoteBody {
   title?: string;
   text?: string;
@@ -47,20 +47,9 @@ interface CreateNoteBody {
   campus: string;
   place?: string;
   tag?: string;
-=======
-interface CreateNoteBody{
-  title?:string;
-  text?:string;
-  image?:string;
-  campus:string;
-  place?:string;
-  tag?:string;
-<<<<<<< HEAD
-=======
-
->>>>>>> 2475eb62a7d080cdf34313b5a53c59f16e99bbe3
->>>>>>> a3d9a1e246eaa1f7883a6aad09c207bc2eb2ede9
 }
+
+
 
 export const createNotes: RequestHandler<
   unknown,
